@@ -11,9 +11,13 @@ import Order from "./components/Order";
 const initialFormState = {
   name: "",
   size: "",
+  pepperoni: false,
+  green_peppers: false,
+  bacon: false,
+  anchovies: false,
 }
 const initialFormErrors = {
-  name: "",
+  name: "Name is required",
   size: "Pizza size is required",
 }
 
@@ -24,6 +28,30 @@ const App = () => {
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [disabled, setDisabled] = useState(true);
 
+  const getOrders = () => {
+    axios.get('https://reqres.in/api/orders')
+      .then(resp => {
+        setOrders(resp.data.data);
+      })
+      .catch(err => {
+        console.error(err);
+      })
+  }
+
+  const postNewOrder = newOrder => {
+    axios.post('https://reqres.in/api/orders', newOrder)
+      .then(resp => {
+        setOrders([ resp.data, ...orders ]);
+        history.push('/orders');
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        setForm(initialFormState);
+      })
+  }
+  
   const validate = (name, value) => {
     yup
       .reach(formSchema, name)
@@ -33,47 +61,38 @@ const App = () => {
           ...formErrors,
           [name]: ""
         });
-        setDisabled(false);
       })
       .catch(err => {
         setFormErrors({
           ...formErrors,
           [name]: err.errors[0]
         })
-        setDisabled(true);
       })
+  }
+
+  const submitHandler = () => {
+    const newOrder = {
+      name: form.name.trim(),
+      size: form.size.trim(),
+      toppings: ['pepperoni', 'sausage', 'bacon', 'anchovies'].filter(hobby => !!form[hobby])
+    }
+    postNewOrder(newOrder);
+  }
+
+  const changeHandler = (name, value) => {
+    // console.log(evt.target.name, evt.target.value);
+    // const value = evt.target.type === 'checkbox' ? evt.target.checked : evt.target.value;
+    setForm({ ...form, [name]: value });
+    validate(name, value);
   }
 
   useEffect(() => {
-    axios.get('https://reqres.in/api/orders')
-      .then(resp => {
-        setOrders(resp.data.data);
-      })
-      .catch(err => {
-        console.error(err);
-      })
+    getOrders()
   }, [])
-
-  const submitHandler = (evt) => {
-    evt.preventDefault();
-    axios.post('https://reqres.in/api/orders', form)
-      .then(resp => {
-        setOrders([ resp.data, ...orders ]);
-        setForm(initialFormState);
-        history.push('/orders');
-      })
-  }
 
   useEffect(() => {
     formSchema.isValid(form).then(valid => setDisabled(!valid))
   }, [form])
-
-  const changeHandler = (evt) => {
-    // console.log(evt.target.name, evt.target.value);
-    const value = evt.target.type === 'checkbox' ? evt.target.checked : evt.target.value;
-    setForm({ ...form, [evt.target.name]: value });
-    validate(evt.target.name, value);
-  }
 
   return (
     <div className="App">

@@ -11,6 +11,15 @@ export default function Order(props) {
     <div>
       <h2>{details.name}</h2>
       <p>{details.size}</p>
+      {
+        !!details.toppings && !!details.toppings.length &&
+        <div>
+          Toppings:
+          <ul>
+            {details.toppings.map((top, idx) => <li key={idx}>{top}</li>)}
+          </ul>
+        </div>
+      }
     </div>
   )
 }

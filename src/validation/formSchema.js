@@ -8,7 +8,10 @@ const formSchema = yup.object().shape({
   size: yup
     .string()
     .oneOf(['Small', 'Medium', 'Large', 'Extra Large', 'Extra EXTRA Large', 'Gargantuan'], 'Pizza size is required'),
-  
+  pepperoni: yup.boolean(),
+  sausage: yup.boolean(),
+  bacon: yup.boolean(),
+  anchovies: yup.boolean(),
 })
 
 export default formSchema;
