@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Switch, Route, Link, useHistory } from "react-router-dom";
-import axios from "axios";
+import axios from 'axios';
 import * as yup from 'yup';
 import formSchema from "./validation/formSchema";
 import Home from "./components/Home";
@@ -12,9 +12,10 @@ const initialFormState = {
   name: "",
   size: "",
   pepperoni: false,
-  green_peppers: false,
+  sausage: false,
   bacon: false,
   anchovies: false,
+  special: "",
 }
 const initialFormErrors = {
   name: "Name is required",
@@ -43,6 +44,7 @@ const App = () => {
       .then(resp => {
         setOrders([ resp.data, ...orders ]);
         history.push('/orders');
+        console.log(resp.data);
       })
       .catch(err => {
         console.log(err);
@@ -74,14 +76,13 @@ const App = () => {
     const newOrder = {
       name: form.name.trim(),
       size: form.size.trim(),
-      toppings: ['pepperoni', 'sausage', 'bacon', 'anchovies'].filter(hobby => !!form[hobby])
+      toppings: ['pepperoni', 'sausage', 'bacon', 'anchovies'].filter(hobby => !!form[hobby]),
+      special: form.special.trim(),
     }
     postNewOrder(newOrder);
   }
 
   const changeHandler = (name, value) => {
-    // console.log(evt.target.name, evt.target.value);
-    // const value = evt.target.type === 'checkbox' ? evt.target.checked : evt.target.value;
     setForm({ ...form, [name]: value });
     validate(name, value);
   }

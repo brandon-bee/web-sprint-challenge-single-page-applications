@@ -82,7 +82,18 @@ export default function Form(props) {
           />
         </label>
       </div>
-      <button type="submit" id="submitButton" disabled={disabled}>Submit Order</button>
+      <div className="form-group inputs">
+        <label><h3>Special Instructions</h3>
+          <input
+            onChange={onChange}
+            name="special"
+            value={values.special}
+            id="special-text"
+            type="text"
+          />
+        </label>
+      </div>
+      <button type="submit" id="order-button" disabled={disabled}>Submit Order</button>
     </form>
   )
 }

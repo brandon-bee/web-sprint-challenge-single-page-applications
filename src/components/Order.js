@@ -14,11 +14,13 @@ export default function Order(props) {
       {
         !!details.toppings && !!details.toppings.length &&
         <div>
-          Toppings:
           <ul>
             {details.toppings.map((top, idx) => <li key={idx}>{top}</li>)}
           </ul>
         </div>
+      }
+      {
+        !!details.special && <p>Special instructions: {details.special}</p>
       }
     </div>
   )
