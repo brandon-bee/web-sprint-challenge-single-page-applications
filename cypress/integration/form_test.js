@@ -1,46 +1,57 @@
-// describe('Form Submission', () => {
-//   beforeEach(() => {
-//     cy.visit('http://localhost:3000/');
-//   })
+describe('MVP tests', () => {
+  beforeEach(() => {
+    cy.visit('http://localhost:3000/pizza');
+  })
 
-//   it('sanity checks', () => {
-//     expect(5).to.equal(5);
-//   });
+  it('sanity checks', () => {
+    expect(5).to.equal(5);
+    expect(1 + 2).to.equal(3);
+    expect({}).not.to.equal({});
+    expect({}).to.eql({});
+  });
 
-//   const nameInput = () => cy.get('input[name=first_name]');
-//   const termsInput = () => cy.get('input[name=terms]');
-//   const submitButton = () => cy.get('button[type="submit"]');
+  const nameInput = () => cy.get('input[name=name]');
+  const sizeInput = () => cy.get('select[name=size]');
+  const pepperoni = () => cy.get('input[name=pepperoni]');
+  const sausage = () => cy.get('input[name=sausage]');
+  const bacon = () => cy.get('input[name=bacon]');
+  const anchovies = () => cy.get('input[name=anchovies]');
+  const submitButton = () => cy.get('button[type="submit"]');
 
-//   it('test that you can add text to box', () => {
-//     nameInput()
-//       .should('exist')
-//       .should('have.value', '')
-//     termsInput()
-//       .should('exist')
-//       .should('not.be.checked')
-//     submitButton()
-//       .should('exist')
+  it('the proper elements exist', () => {
+    nameInput().should('exist');
+    sizeInput().should('exist');
+    pepperoni().should('exist');
+    sausage().should('exist');
+    bacon().should('exist');
+    anchovies().should('exist');
+    submitButton().should('exist');
+  });
 
-//     nameInput()
-//       .type('test')
-//     termsInput().check()
+  it('test that you can add text to name box', () => {
+    nameInput()
+      .type('Sauron')
+      .should('have.value', 'Sauron');
+  });
 
-//     nameInput()
-//       .should('have.value', 'test')
+  it('test that you can select multiple toppings', () => {
+    pepperoni()
+      .check();
+    sausage()
+      .check();
+    bacon()
+      .check();
+    anchovies()
+      .check();
+  });
 
-//     termsInput()
-//       .should('be.checked')
-    
-//     submitButton()
-//       .should('not.be.disabled')
-
-//     submitButton()
-//       .click()
-
-//     const nameOutput = () => cy.get('p:first-child')
-
-//     nameOutput()
-//       .should('exist')
-//       .contains('test')
-//   });
-// })
+  it('test that you can submit the form', () => {
+    nameInput()
+      .type('Sauron');
+    sizeInput()
+      .select('Gargantuan');
+    submitButton()
+      .should('not.be.disabled')
+      .click();
+  });
+})
